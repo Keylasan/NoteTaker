@@ -1,7 +1,3 @@
-
-
-
-
 // Dependencies
 // =============================================================
 var express = require("express");
@@ -12,12 +8,13 @@ var fs = require("fs");
 var app = express();
 var PORT = process.env.PORT || 3001;
 
+
+//globals
+var notes = [];
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname,"/public")));
-
-
 
 
 
@@ -42,9 +39,18 @@ app.get("/notes", function (req, res) {
 
 app.get("/api/notes", function (req, res) {
     fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
-        console.log(data)
+        res.json(JSON.parse(data));
     });
 });
+
+app.post("/api/notes", function (req, res) {
+    var newNote = req.body;
+  
+    notes.push(newNote);
+  
+    res.json(newNote);
+  });
+  
 
 
 
