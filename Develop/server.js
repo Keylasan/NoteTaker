@@ -41,11 +41,30 @@ app.post("/api/notes", function(req, res) {
   var newNote = req.body;
   fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
     notes = JSON.parse(data);
+    req.body.id = notes.length;
     notes.push(newNote);
-    fs.writeFile(__dirname + "/db/db.json", JSON.stringify(notes), function read(err, data) {
-console.log("new note added");
-    });
+    fs.writeFile(
+      __dirname + "/db/db.json",
+      JSON.stringify(notes),
+      function read(err, data) {
+        console.log("new note added");
+      }
+    );
   });
+  res.json(newNote);
+});
+
+app.delete("/api/notes/:id", function(req, res) {
+  var id = req.params.id;
+  fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
+    notes = JSON.parse(data);
+    notes.splice(id, 1);
+    fs.writeFile(__dirname + "/db/db.json",JSON.stringify(notes),function read(err, data) {
+        console.log("poof!!");
+      }
+    );
+  });
+  res.json(id);
 });
 
 // Starts the server to begin listening
